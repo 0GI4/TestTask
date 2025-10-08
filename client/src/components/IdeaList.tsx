@@ -1,6 +1,7 @@
 import React from "react";
 import { Idea } from "../types";
 import IdeaCard from "./IdeaCard";
+import List from "@mui/material/List";
 
 const ideas: Idea[] = [
   {
@@ -13,11 +14,11 @@ const ideas: Idea[] = [
 
 const IdeaList = () => {
   return (
-    <div>
+    <List>
       {ideas.map((idea) => (
         <IdeaCard idea={idea} />
       ))}
-    </div>
+    </List>
   );
 };
 

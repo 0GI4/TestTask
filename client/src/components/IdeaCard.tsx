@@ -1,16 +1,17 @@
 import React from "react";
 import { Idea } from "../types";
 import "./ideas.css";
+import { ListItem, ListItemButton, ListItemText } from "@mui/material";
 
 const IdeaCard = ({ idea }: { idea: Idea }) => {
   return (
-    <div className="idea">
-      <div className="idea-main-text">{`${idea.text}`}</div>
-
-      <div className="idea-votes-text">{`Уже проголосовали ${idea.votes} человек`}</div>
-
-      <button className="idea-button_vote">Проголосовать</button>
-    </div>
+    <ListItem>
+      <ListItemText style={{ width: "60%" }}>{idea.text}</ListItemText>
+      <ListItemText
+        style={{ width: "30%", color: 'green' }}
+      >{`Уже проголосвали ${idea.votes}`}</ListItemText>
+      <ListItemButton  style={{ width: "20%" }}>Проголосовать</ListItemButton>
+    </ListItem>
   );
 };
 
