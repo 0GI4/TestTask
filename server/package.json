@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "db:reset": "node -e \"console.log('Use TRUNCATE in seed.ts reset block if needed')\""
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +19,7 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "@types/node": "^24.7.0",
+    "@types/node": "^24.7.2",
     "prisma": "^6.17.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
