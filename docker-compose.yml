@@ -12,7 +12,7 @@ services:
       # Локальные, аккуратные настройки:
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     command: >

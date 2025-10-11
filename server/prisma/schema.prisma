@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -12,4 +8,36 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Пользователей не заводим: считаем по IP. Голос — это запись в IdeaVote.
+
+model Idea {
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String
+  votesCount   Int         @default(0) @map("votes_count")
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  votes        IdeaVote[]
+
+  @@map("idea")
+  @@index([votesCount])
+  @@index([createdAt])
+}
+
+model IdeaVote {
+  id         BigInt    @id @default(autoincrement())
+  ideaId     Int       @map("idea_id")
+  // Храним IP как String — Prisma работает без танцев. В БД колонка будет inet (см. SQL миграцию ниже).
+  ip         String
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  idea       Idea      @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  @@map("idea_vote")
+  @@unique([ideaId, ip])
+  @@index([ip])
+  @@index([ideaId])
+  @@index([createdAt])
 }
