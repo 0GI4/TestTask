@@ -1,0 +1,95 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 260px;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 1.35;
+  color: #374151;
+}
+
+.button {
+  height: 40px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.button:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.buttonText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.listbox {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 4px;
+  margin: 0;
+  list-style: none;
+  z-index: 20;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #111827;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.option:hover {
+  background: #f3f4f6;
+}
+
+.optionSelected {
+  composes: option;
+  background: #eef2ff;
+  color: #1e3a8a;
+}
+
+.optionLabel {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.check {
+  width: 16px;
+  height: 16px;
+}
