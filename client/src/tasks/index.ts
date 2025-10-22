@@ -126,9 +126,28 @@ const newOwnerOrUser: Userintersection = {
 
 type NewPartial<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
 
-const newOwnerOrUser2: NewPartial<Userintersection, 'isAdmin'> = {
+const newOwnerOrUser2: NewPartial<Userintersection, "isAdmin"> = {
   isAdmin: true,
 };
 
+const R = { a: 1, b: 2, c: 3, d: 4 };
 
+function getRProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
 
+interface Admin2 {
+  isAdmin: boolean;
+  isWorking: boolean;
+  isOut: boolean;
+}
+
+type Part<T> = {
+  readonly [K in keyof T]?: T[K];
+};
+
+const James: Part<Admin2> = {
+  isAdmin: true,
+};
+
+James.isAdmin = false;
