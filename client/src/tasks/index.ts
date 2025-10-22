@@ -92,10 +92,6 @@ const b1: R2 = { id: 1, name: "A", email: "x@y.z" };
 const b2: R2 = { id: 1, name: "", email: "x@y.z" }; // OK
 const b3: R2 = { id: 1, email: "x@y.z" };
 
-
-
-
-
 interface User4 {
   id: number;
   name: string;
@@ -107,3 +103,32 @@ type D = MyPick<User4, "id" | "email">;
 const d1: D = { id: 1, email: "x@y.z" };
 // @ts-expect-error: нет name
 const d2: D = { id: 1, email: "x@y.z", name: "A" };
+
+type Admin = {
+  isAdmin: boolean;
+};
+
+type Guest = {
+  isGuest: boolean;
+};
+
+type Owner = {
+  isOwner: boolean;
+};
+
+type Userintersection = Admin & Guest & Owner;
+
+const newOwnerOrUser: Userintersection = {
+  isAdmin: true,
+  isGuest: true,
+  isOwner: true,
+};
+
+type NewPartial<T, K extends keyof T> = Partial<Omit<T, K>> & Pick<T, K>;
+
+const newOwnerOrUser2: NewPartial<Userintersection, 'isAdmin'> = {
+  isAdmin: true,
+};
+
+
+
