@@ -143,11 +143,53 @@ interface Admin2 {
 }
 
 type Part<T> = {
-  readonly [K in keyof T]?: T[K];
+  [K in keyof T]?: T[K];
 };
 
 const James: Part<Admin2> = {
   isAdmin: true,
 };
 
-James.isAdmin = false;
+// James.isAdmin = false;
+
+// Сущности
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  published: boolean;
+}
+
+const updateEntity = <T>(obj: T, value: Part<T>): T => {
+  return { ...obj, value };
+};
+
+const user3: User = { id: 1, name: "Alice", email: "alice@example.com" };
+const updatedUser = updateEntity(user3, { name: "Bob" }); // Корректно
+// Ожидаемый результат: { id: 1, name: "Bob", email: "alice@example.com" }
+
+const post: Post = {
+  id: 1,
+  title: "Hello",
+  content: "World",
+  published: false,
+};
+const updatedPost = updateEntity(post, { published: true }); // Корректно
+// Ожидаемый результат: { id: 1, title: "Hello", content: "World", published: true }
+
+// Пример 3: Ошибка
+updateEntity(user3, { age: 30 }); // Ошибка: "age" не существует в типе User
+
+type Status = "new" | "waiting_load" | "in_work" | "done" | "cert_ready";
+
+type StatusWithBrackets = {
+  [key in Status]: `[${key}]`;
+}[Status];
+
+type StatusWithoutNew = Part<Readonly<Omit<Record<Status, boolean>, "new">>>;
