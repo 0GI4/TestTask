@@ -2,6 +2,7 @@ import React from "react";
 import { Idea } from "../types";
 import IdeaCard from "./IdeaCard";
 import List from "@mui/material/List";
+import "./ideas.css";
 
 const ideas: Idea[] = [
   {
@@ -14,7 +15,7 @@ const ideas: Idea[] = [
 
 const IdeaList = () => {
   return (
-    <List>
+    <List className="idea_list">
       {ideas.map((idea) => (
         <IdeaCard idea={idea} />
       ))}
