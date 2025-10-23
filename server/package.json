@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "tsx watch router/index.ts",
+    "start": "node index.ts",
+    "dev": "tsx watch src/server.ts",
     "prisma:seed": "tsx prisma/seed.ts",
     "db:reset": "node -e \"console.log('Use TRUNCATE in seed.ts reset block if needed')\""
   },
