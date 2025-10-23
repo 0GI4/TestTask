@@ -1,6 +1,6 @@
 .idea {
   display: flex;
-  max-width: 100vw;
+  max-width: 90vw;
   margin: 16px;
   justify-content: space-evenly;
   overflow-x: hidden;
@@ -8,9 +8,13 @@
 }
 
 .ideas_header {
-  padding: 16px 16px;
+  padding-right: 16px;
+  padding-left: 16px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  top: 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .idea-button_vote {
@@ -20,4 +24,26 @@
   color: white;
   width: 190px;
   height: 40px;
+}
+
+.ideas_header-rightSide {
+  display: flex;
+  align-items: center;
+}
+
+.ideas_header-rightSide_votes {
+  display: flex;
+  padding: 20px 20px;
+}
+
+.rightSide_votes-counter {
+  padding-right: 5px;
+}
+
+
+.idea_item {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin: 10px;
+  margin-right: 16px;
 }

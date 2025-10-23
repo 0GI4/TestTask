@@ -8,7 +8,7 @@ const IdeaCard = ({ idea }: { idea: Idea }) => {
     fetch("/api/").then((res) => console.log(res));
   }, []);
   return (
-    <ListItem>
+    <ListItem className="idea_item">
       <ListItemText style={{ width: "60%" }}>{idea.text}</ListItemText>
       <ListItemText
         style={{ width: "30%", color: "green" }}

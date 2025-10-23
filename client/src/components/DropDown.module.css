@@ -1,7 +1,7 @@
 .wrapper {
   position: relative;
-  display: inline-flex;
-  flex-direction: column;
+  display: flex;
+  align-items: center;
   gap: 6px;
   min-width: 260px;
 }
@@ -10,6 +10,7 @@
   font-size: 14px;
   line-height: 1.35;
   color: #374151;
+  padding-right: 10px;
 }
 
 .button {

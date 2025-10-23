@@ -23,7 +23,7 @@ const OPTIONS: Option[] = [
 const SortDropdown = ({
   value,
   onChange,
-  label = "Сортировка",
+  label = "Сортировка:",
 }: SortDropdownProps) => {
   const [open, setOpen] = useState(false);
 
