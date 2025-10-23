@@ -10,7 +10,7 @@ export const getIdeas = async (
 ) => {
   try {
     const ideas = await prisma.idea.findMany();
-    res.json(ideas);
+    res.status(200).json(ideas);
   } catch (error) {
     next(error);
   }

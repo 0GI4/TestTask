@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.set("trust proxy", true);
 
-app.use("/api/ideas", ideaRoutes);
+app.use("/api", ideaRoutes);
 
 app.use(errorHandler);
 

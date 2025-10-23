@@ -3,6 +3,6 @@ import { getIdeas } from "../controllers/ideaController";
 
 const router = Router();
 
-router.get("/", getIdeas);
+router.get("/ideas", getIdeas);
 
 export default router;

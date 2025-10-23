@@ -1,5 +1,6 @@
 export type Idea = {
   id?: number;
-  text: string;
-  votes: number;
+  title: string;
+  description?: string;
+  votesCount: number;
 };
