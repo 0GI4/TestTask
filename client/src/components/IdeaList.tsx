@@ -29,13 +29,20 @@ const IdeaList = () => {
     return () => controller.abort();
   }, []);
 
+  // Колбэк, который карточка вызовет после успешного голосования
+  function handleVoted(ideaId: number, newVotesCount: number) {
+    setIdeas(prev =>
+      prev.map(i => (i.id === ideaId ? { ...i, votesCount: newVotesCount } : i))
+    );
+  }
+
   if (loading) return <div className="idea_list__loading">Загрузка…</div>;
   if (error) return <div className="idea_list__error">Ошибка: {error}</div>;
 
   return (
     <List className="idea_list">
       {ideas.map((idea) => (
-        <IdeaCard key={idea.id} idea={idea} />
+        <IdeaCard key={idea.id} idea={idea} onVoted={handleVoted} />
       ))}
     </List>
   );
