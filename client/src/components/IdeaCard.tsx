@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Idea } from "../types";
 import "./ideas.css";
 import { ListItem } from "@mui/material";
@@ -27,15 +27,18 @@ const IdeaCard = ({
   const [statusText, setStatusText] = useState<string | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
 
+  const clickGuardRef = useRef<number>(0);
+
   async function onVote(ideaId: number) {
-    if (loading) return;
+    const now = Date.now();
+    if (loading || now - clickGuardRef.current < 700) return; 
+    clickGuardRef.current = now;
+
     setLoading(true);
     setStatusText(null);
     setErrorText(null);
-
     try {
       const res = (await voteForIdea(String(ideaId))) as VoteSuccessResponse;
-      // Обновим счетчик в родителе
       onVoted(ideaId, res.idea.votesCount);
       setStatusText(res.message || "Голос принят.");
     } catch (e) {

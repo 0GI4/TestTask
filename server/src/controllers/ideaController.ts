@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Prisma, PrismaClient } from "../generated/prisma";
 import { toJsonSafe } from "../utils/jsonBigInt";
+import { getClientIp } from "../utils/ip";
 
 const prisma = new PrismaClient();
 
@@ -34,33 +35,21 @@ export const voteForIdea = async (
       });
     }
 
-    const ip = req.ip as string;
+    const ip = getClientIp(req);
 
     const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
     if (!idea) {
       return res.status(404).json({ message: "Идея не найдена." });
     }
+    const vote = await prisma.ideaVote.create({
+      data: { ip, idea: { connect: { id: ideaId } } },
+    });
+    // подтягиваем актуальную идею уже без инкремента
+    const updatedIdea = await prisma.idea.findUnique({ where: { id: ideaId } });
 
-    const [vote, updatedIdea] = await prisma.$transaction([
-      prisma.ideaVote.create({
-        data: {
-          ip,
-          idea: { connect: { id: ideaId } },
-        },
-      }),
-      prisma.idea.update({
-        where: { id: ideaId },
-        data: { votesCount: { increment: 1 } },
-      }),
-    ]);
-
-    return res.status(201).json(
-      toJsonSafe({
-        message: "Голос принят.",
-        vote,
-        idea: updatedIdea,
-      })
-    );
+    return res
+      .status(201)
+      .json(toJsonSafe({ message: "Голос принят.", vote, idea: updatedIdea }));
   } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
