@@ -5,9 +5,8 @@ export type Idea = {
   votesCount: number;
 };
 
-
 export type Vote = {
-  id: string;           
+  id: string;
   ideaId: number;
   ip: string;
   createdAt: string;
@@ -16,9 +15,13 @@ export type Vote = {
 export type VoteSuccessResponse = {
   message: string;
   vote: Vote;
-  idea: Idea; 
+  idea: Idea;
 };
 
 export type VoteErrorResponse = {
   message: string;
+};
+
+export type Votes = {
+  totalVotes: number;
 };

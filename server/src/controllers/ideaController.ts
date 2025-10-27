@@ -66,3 +66,24 @@ export const voteForIdea = async (
     return next(error);
   }
 };
+
+export const totalVotesFromIp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const clientIp = getClientIp(req);
+
+    const total = await prisma.ideaVote.findMany({
+      where: { ip: { equals: clientIp } },
+    });
+
+    return res.json({
+      totalVotes: total.length,
+    });
+    
+  } catch (error) {
+    return next(error);
+  }
+};

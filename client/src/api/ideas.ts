@@ -1,4 +1,4 @@
-import { Idea, VoteErrorResponse, VoteSuccessResponse } from "../types";
+import { Idea, VoteErrorResponse, Votes, VoteSuccessResponse } from "../types";
 
 export async function getIdeas(signal?: AbortSignal): Promise<Idea[]> {
   const response = await fetch("http://localhost:4000/api/ideas", {
@@ -74,5 +74,15 @@ export async function voteForIdea(id: string): Promise<VoteSuccessResponse> {
     throw err;
   } finally {
     clearTimeout(timeout);
+  }
+}
+
+export async function getTotalVotes(): Promise<Votes> {
+  try {
+    const res = await fetch("http://localhost:4000/api/votes");
+
+    return res.json();
+  } catch (error) {
+    throw error;
   }
 }

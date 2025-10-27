@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { getIdeas, voteForIdea } from "../controllers/ideaController";
+import {
+  getIdeas,
+  totalVotesFromIp,
+  voteForIdea,
+} from "../controllers/ideaController";
 
 const router = Router();
 
@@ -14,5 +18,6 @@ router.use((req, _res, next) => {
 
 router.get("/ideas", getIdeas);
 router.post("/idea/:id", voteForIdea);
+router.get("/votes", totalVotesFromIp);
 
 export default router;
