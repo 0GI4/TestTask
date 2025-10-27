@@ -1,11 +1,18 @@
+import { SortKey } from "../components/Dropdown";
 import { Idea, VoteErrorResponse, Votes, VoteSuccessResponse } from "../types";
 
-export async function getIdeas(signal?: AbortSignal): Promise<Idea[]> {
-  const response = await fetch("http://localhost:4000/api/ideas", {
-    method: "GET",
-    headers: { Accept: "application/json" },
-    signal,
-  });
+export async function getIdeas(
+  sort: SortKey,
+  signal?: AbortSignal
+): Promise<Idea[]> {
+  const response = await fetch(
+    `http://localhost:4000/api/ideas?sort=${encodeURIComponent(sort)}`,
+    {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      signal,
+    }
+  );
 
   if (!response.ok) {
     const text = await response.text().catch(() => "");

@@ -5,8 +5,12 @@ import voteIcon from "../assets/icons/free-icon-vote-95377.png";
 import { Votes } from "../types";
 import { getTotalVotes } from "../api/ideas";
 
-const Header = () => {
-  const [sort, setSort] = useState<SortKey>("popular");
+interface HeaderProps {
+  sort: SortKey;
+  setSort: (value: SortKey) => void;
+}
+
+const Header = ({ sort = "popular", setSort }: HeaderProps) => {
   const [votes, setVotes] = useState<Votes | null>(null);
 
   useEffect(() => {
