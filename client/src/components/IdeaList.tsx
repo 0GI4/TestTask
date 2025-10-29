@@ -1,16 +1,17 @@
 import IdeaCard from "./IdeaCard";
 import List from "@mui/material/List";
 import "./ideas.css";
-import { Idea } from "../types";
+import { useIdeas } from "../hooks/useIdeas";
+import { SortKey } from "./Dropdown";
 
 interface IdeaListProps {
-  ideas: Idea[];
-  setIdeas: (ideas: Idea[] | ((prev: Idea[]) => Idea[])) => void;
-  loading: boolean;
-  error: null | string;
+  sort: SortKey;
+  setSort: (value: SortKey) => void;
 }
 
-const IdeaList = ({ ideas, setIdeas, loading, error }: IdeaListProps) => {
+const IdeaList = ({ sort, setSort }: IdeaListProps) => {
+  const { ideas, setIdeas } = useIdeas(sort);
+
   // Колбэк, который карточка вызовет после успешного голосования
   function handleVoted(ideaId: number, newVotesCount: number) {
     setIdeas((prev) =>
@@ -19,9 +20,6 @@ const IdeaList = ({ ideas, setIdeas, loading, error }: IdeaListProps) => {
       )
     );
   }
-
-  if (loading) return <div className="idea_list__loading">Загрузка…</div>;
-  if (error) return <div className="idea_list__error">Ошибка: {error}</div>;
 
   return (
     <List className="idea_list">
