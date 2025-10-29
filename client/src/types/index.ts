@@ -25,3 +25,8 @@ export type VoteErrorResponse = {
 export type Votes = {
   totalVotes: number;
 };
+
+export type userActivity = {
+  totalVotes: number;
+  votedIdeas: Pick<Idea, "id">[];
+};
