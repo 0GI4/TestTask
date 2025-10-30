@@ -47,12 +47,10 @@ export async function voteForIdea(id: string): Promise<VoteSuccessResponse> {
     const data = isJson ? await response.json() : null;
 
     if (response.status === 201) {
-      // Успех
       return data as VoteSuccessResponse;
     }
 
     if (response.status === 409) {
-      // Повторный голос с этого IP
       const msg =
         (data as VoteErrorResponse | null)?.message ||
         "Вы уже голосовали за эту идею.";

@@ -12,7 +12,6 @@ interface IdeaListProps {
 const IdeaList = ({ sort, setSort }: IdeaListProps) => {
   const { ideas, setIdeas } = useIdeas(sort);
 
-  // Колбэк, который карточка вызовет после успешного голосования
   function handleVoted(ideaId: number, newVotesCount: number) {
     setIdeas((prev) =>
       prev.map((i) =>

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SortDropdown, { SortKey } from "./Dropdown";
 import "./ideas.css";
 import voteIcon from "../assets/icons/free-icon-vote-95377.png";
-import { Votes } from "../types";
-import { getTotalVotes } from "../api/ideas";
+import useIdeaStore from "../store";
 
 interface HeaderProps {
   sort: SortKey;
@@ -11,11 +10,7 @@ interface HeaderProps {
 }
 
 const Header = ({ sort = "popular", setSort }: HeaderProps) => {
-  const [votes, setVotes] = useState<Votes | null>(null);
-
-  useEffect(() => {
-    getTotalVotes().then((votes) => setVotes(votes));
-  }, []);
+  const { userActivity } = useIdeaStore();
 
   return (
     <header className="ideas_header">
@@ -27,7 +22,9 @@ const Header = ({ sort = "popular", setSort }: HeaderProps) => {
         {" "}
         <SortDropdown value={sort} onChange={setSort} />
         <div className="ideas_header-rightSide_votes">
-          <div className="rightSide_votes-counter">{votes?.totalVotes}/10</div>
+          <div className="rightSide_votes-counter">
+            {userActivity?.totalVotes ?? 0}/10
+          </div>
           <img src={voteIcon} alt="" width={20} height={20} />
         </div>
       </div>
