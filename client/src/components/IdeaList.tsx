@@ -9,8 +9,8 @@ interface IdeaListProps {
   setSort: (value: SortKey) => void;
 }
 
-const IdeaList = ({ sort, setSort }: IdeaListProps) => {
-  const { ideas, setIdeas } = useIdeas(sort);
+const IdeaList = ({ sort }: IdeaListProps) => {
+  const { ideas, setIdeas, totalVotes, votedIdeas } = useIdeas(sort);
 
   function handleVoted(ideaId: number, newVotesCount: number) {
     setIdeas((prev) =>
@@ -20,11 +20,22 @@ const IdeaList = ({ sort, setSort }: IdeaListProps) => {
     );
   }
 
+  const limitReached = (totalVotes ?? 0) >= 10;
+
   return (
     <List className="idea_list">
-      {ideas.map((idea) => (
-        <IdeaCard key={idea.id} idea={idea} onVoted={handleVoted} />
-      ))}
+      {ideas.map((idea) => {
+        const alreadyVoted = votedIdeas.includes(idea.id as number);
+        return (
+          <IdeaCard
+            key={idea.id}
+            idea={idea}
+            onVoted={handleVoted}
+            isAlreadyVoted={alreadyVoted}
+            isLimitReached={limitReached}
+          />
+        );
+      })}
     </List>
   );
 };

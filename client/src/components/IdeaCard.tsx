@@ -1,58 +1,73 @@
 import React, { useRef, useState } from "react";
-import { Idea } from "../types";
+import { Idea, VoteSuccessResponse } from "../types";
 import "./ideas.css";
 import { ListItem } from "@mui/material";
 import { voteForIdea } from "../api/ideas";
+import useIdeaStore from "../store";
 
-type VoteSuccessResponse = {
-  message: string;
-  vote: { id: string; ideaId: number; ip: string; createdAt: string };
-  idea: {
-    id: number;
-    title: string;
-    description: string;
-    votesCount: number;
-    createdAt: string;
-  };
-};
 
 const IdeaCard = ({
   idea,
   onVoted,
+  isAlreadyVoted,
+  isLimitReached,
 }: {
   idea: Idea;
   onVoted: (ideaId: number, newVotesCount: number) => void;
+  isAlreadyVoted: boolean;
+  isLimitReached: boolean;
 }) => {
   const [loading, setLoading] = useState(false);
   const [statusText, setStatusText] = useState<string | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
 
+  const { addVotedIdea, incrementTotalVotes } = useIdeaStore();
+
   const clickGuardRef = useRef<number>(0);
+  const disabled = loading || isLimitReached || isAlreadyVoted;
 
   async function onVote(ideaId: number) {
     const now = Date.now();
-    if (loading || now - clickGuardRef.current < 700) return; 
+    if (loading || now - clickGuardRef.current < 700) return;
     clickGuardRef.current = now;
+    if (disabled) return;
 
     setLoading(true);
     setStatusText(null);
     setErrorText(null);
     try {
       const res = (await voteForIdea(String(ideaId))) as VoteSuccessResponse;
+
       onVoted(ideaId, res.idea.votesCount);
+      addVotedIdea(ideaId);
+      incrementTotalVotes();
+
       setStatusText(res.message || "Голос принят.");
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Ошибка голосования.";
       setErrorText(msg);
+
+      if (msg.includes("уже голосовали") || msg.includes("Уже голосовали")) {
+        addVotedIdea(ideaId);
+      }
     } finally {
       setLoading(false);
     }
   }
 
+  const btnText = isLimitReached
+    ? "Вы уже проголосовали за 10 идей"
+    : isAlreadyVoted
+    ? "Уже голосовали"
+    : loading
+    ? "Голосуем..."
+    : "Проголосовать";
+
   return (
     <ListItem className="idea_item" divider>
       <div
         style={{ width: "60%", overflow: "hidden", textOverflow: "ellipsis" }}
+        title={idea.title}
       >
         {idea.title}
       </div>
@@ -72,11 +87,17 @@ const IdeaCard = ({
         type="button"
         onClick={() => onVote(idea.id as number)}
         className="idea_vote-button"
-        style={{ width: "20%" }}
-        disabled={loading}
-        aria-label={`Проголосовать за идею ${idea.title}`}
+        style={{ width: "20%", cursor: disabled ? "not-allowed" : "pointer" }}
+        disabled={disabled}
+        aria-disabled={disabled}
+        aria-label={
+          isLimitReached
+            ? "Вы уже проголосовали за 10 идей"
+            : `Проголосовать за идею ${idea.title}`
+        }
+        title={isLimitReached ? "Лимит голосов исчерпан" : undefined}
       >
-        {loading ? "Голосуем..." : "Проголосовать"}
+        {btnText}
       </button>
 
       {statusText && (

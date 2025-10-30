@@ -9,6 +9,9 @@ export type State = {
 export type Action = {
   setIdeas: (ideas: Idea[] | ((prev: Idea[]) => Idea[])) => void;
   setTotalVotes: (totalVotes: number) => void;
+  setVotedIdeas: (ids: number[]) => void;
+  addVotedIdea: (id: number) => void;
+  incrementTotalVotes: () => void;
 };
 
 const useIdeaStore = create<State & Action>((set) => ({
@@ -29,6 +32,28 @@ const useIdeaStore = create<State & Action>((set) => ({
       userActivity: {
         ...state.userActivity,
         totalVotes,
+      },
+    })),
+  setVotedIdeas: (ids) =>
+    set((state) => ({
+      userActivity: { ...state.userActivity, votedIdeas: ids },
+    })),
+  addVotedIdea: (id) =>
+    set((state) =>
+      state.userActivity.votedIdeas.includes(id)
+        ? state
+        : {
+            userActivity: {
+              ...state.userActivity,
+              votedIdeas: [...state.userActivity.votedIdeas, id],
+            },
+          }
+    ),
+  incrementTotalVotes: () =>
+    set((state) => ({
+      userActivity: {
+        ...state.userActivity,
+        totalVotes: state.userActivity.totalVotes + 1,
       },
     })),
 }));

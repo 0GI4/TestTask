@@ -24,9 +24,10 @@ export type VoteErrorResponse = {
 
 export type Votes = {
   totalVotes: number;
+  votedIdeas: number[];
 };
 
 export type userActivity = {
   totalVotes: number;
-  votedIdeas: Pick<Idea, "id">[];
+  votedIdeas: number[];
 };

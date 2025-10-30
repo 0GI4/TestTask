@@ -48,8 +48,7 @@ export const voteForIdea = async (
 
     if (!Number.isInteger(ideaId) || ideaId <= 0) {
       return res.status(400).json({
-        message:
-          "Поле 'id' обязательно и должно быть положительным целым числом.",
+        message: "Поле 'id' обязательно",
       });
     }
 
@@ -62,7 +61,6 @@ export const voteForIdea = async (
     const vote = await prisma.ideaVote.create({
       data: { ip, idea: { connect: { id: ideaId } } },
     });
-    // подтягиваем актуальную идею уже без инкремента
     const updatedIdea = await prisma.idea.findUnique({ where: { id: ideaId } });
 
     return res
@@ -93,13 +91,13 @@ export const totalVotesFromIp = async (
   try {
     const clientIp = getClientIp(req);
 
-    const total = await prisma.ideaVote.findMany({
-      where: { ip: { equals: clientIp } },
+    const votes = await prisma.ideaVote.findMany({
+      where: { ip: clientIp },
+      select: { ideaId: true },
+      orderBy: { createdAt: "asc" },
     });
-
-    return res.json({
-      totalVotes: total.length,
-    });
+    const votedIdeas = votes.map((v) => v.ideaId);
+    return res.json({ totalVotes: votedIdeas.length, votedIdeas });
   } catch (error) {
     return next(error);
   }

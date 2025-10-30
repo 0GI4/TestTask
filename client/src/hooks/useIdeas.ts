@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import useIdeaStore, { State } from "../store";
+import useIdeaStore from "../store";
 import { getIdeas, getTotalVotes } from "../api/ideas";
 import { SortKey } from "../components/Dropdown";
 
 export function useIdeas(sort: SortKey) {
-  const { ideas, setIdeas, setTotalVotes, userActivity } = useIdeaStore();
+  const { ideas, setIdeas, setTotalVotes, userActivity, setVotedIdeas } =
+    useIdeaStore();
 
   useEffect(() => {
     (async () => {
@@ -13,8 +14,14 @@ export function useIdeas(sort: SortKey) {
 
       const votes = await getTotalVotes();
       setTotalVotes(votes.totalVotes);
+      setVotedIdeas(Array.isArray(votes.votedIdeas) ? votes.votedIdeas : []);
     })();
-  }, [setIdeas, setTotalVotes, sort]);
+  }, [setIdeas, setTotalVotes, setVotedIdeas, sort]);
 
-  return { ideas, totalVotes: userActivity.totalVotes, setIdeas };
+  return {
+    ideas,
+    totalVotes: userActivity.totalVotes,
+    votedIdeas: userActivity.votedIdeas,
+    setIdeas,
+  };
 }

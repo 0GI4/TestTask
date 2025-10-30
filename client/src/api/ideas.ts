@@ -83,11 +83,21 @@ export async function voteForIdea(id: string): Promise<VoteSuccessResponse> {
 }
 
 export async function getTotalVotes(): Promise<Votes> {
-  try {
-    const res = await fetch("http://localhost:4000/api/votes");
+  const res = await fetch("http://localhost:4000/api/votes", {
+    method: "GET",
+    headers: { Accept: "application/json" },
+  });
 
-    return res.json();
-  } catch (error) {
-    throw error;
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(
+      `GET /api/votes failed: ${res.status} ${res.statusText}${
+        text ? ` — ${text}` : ""
+      }`
+    );
   }
+
+  const data = await res.json();
+
+  return data as Votes;
 }
