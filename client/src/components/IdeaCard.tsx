@@ -1,10 +1,21 @@
-import React, { useRef, useState } from "react";
-import { Idea, VoteSuccessResponse } from "../types";
+import React, { useEffect, useRef, useState } from "react";
+import { Idea } from "../types";
 import "./ideas.css";
 import { ListItem } from "@mui/material";
 import { voteForIdea } from "../api/ideas";
 import useIdeaStore from "../store";
 
+type VoteSuccessResponse = {
+  message: string;
+  vote: { id: string; ideaId: number; ip: string; createdAt: string };
+  idea: {
+    id: number;
+    title: string;
+    description: string;
+    votesCount: number;
+    createdAt: string;
+  };
+};
 
 const IdeaCard = ({
   idea,
@@ -24,7 +35,29 @@ const IdeaCard = ({
   const { addVotedIdea, incrementTotalVotes } = useIdeaStore();
 
   const clickGuardRef = useRef<number>(0);
+  const statusTimerRef = useRef<number | null>(null);
+
   const disabled = loading || isLimitReached || isAlreadyVoted;
+
+  // Скрыть "Голос принят." через 3 секунды
+  useEffect(() => {
+    if (!statusText) return;
+    if (statusTimerRef.current) {
+      window.clearTimeout(statusTimerRef.current);
+      statusTimerRef.current = null;
+    }
+    statusTimerRef.current = window.setTimeout(() => {
+      setStatusText(null);
+      statusTimerRef.current = null;
+    }, 3000);
+
+    return () => {
+      if (statusTimerRef.current) {
+        window.clearTimeout(statusTimerRef.current);
+        statusTimerRef.current = null;
+      }
+    };
+  }, [statusText]);
 
   async function onVote(ideaId: number) {
     const now = Date.now();
@@ -46,7 +79,6 @@ const IdeaCard = ({
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Ошибка голосования.";
       setErrorText(msg);
-
       if (msg.includes("уже голосовали") || msg.includes("Уже голосовали")) {
         addVotedIdea(ideaId);
       }
@@ -87,9 +119,13 @@ const IdeaCard = ({
         type="button"
         onClick={() => onVote(idea.id as number)}
         className="idea_vote-button"
-        style={{ width: "20%", cursor: disabled ? "not-allowed" : "pointer" }}
+        style={{ width: "20%" }}
         disabled={disabled}
         aria-disabled={disabled}
+        data-disabled={disabled ? "true" : "false"}
+        data-state={
+          isLimitReached ? "limit" : isAlreadyVoted ? "voted" : "ready"
+        }
         aria-label={
           isLimitReached
             ? "Вы уже проголосовали за 10 идей"
@@ -101,10 +137,23 @@ const IdeaCard = ({
       </button>
 
       {statusText && (
-        <div style={{ color: "teal", marginLeft: 12 }}>{statusText}</div>
+        <div
+          className="idea_status"
+          role="status"
+          aria-live="polite"
+          data-visible={!!statusText}
+          style={{ marginLeft: 12 }}
+        >
+          {statusText}
+        </div>
       )}
       {errorText && (
-        <div style={{ color: "crimson", marginLeft: 12 }}>{errorText}</div>
+        <div
+          className="idea_error"
+          style={{ color: "crimson", marginLeft: 12 }}
+        >
+          {errorText}
+        </div>
       )}
     </ListItem>
   );
